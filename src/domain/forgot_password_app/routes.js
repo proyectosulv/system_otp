@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const verifyToken = require("../../middleware/auth")
+
 const { sendPasswordResetOTPEmailService, resetUserPassword } = require("./services")
 
-router.post("/reset", async (req, res)=>{
+router.post("/reset", verifyToken, async (req, res)=>{
     try {
         let { email, otp, newPassword } = req.body;
         if (!(email && otp && newPassword))
@@ -16,7 +18,7 @@ router.post("/reset", async (req, res)=>{
 
 
 //password reset request
-router.post("/", async (req, res)=>{
+router.post("/", verifyToken, async (req, res)=>{
     try {
         const { email } = req.body;
         if (!email) throw Error("An email is required");

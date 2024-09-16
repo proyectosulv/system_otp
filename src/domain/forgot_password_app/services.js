@@ -1,4 +1,4 @@
-const User = require("./../user/model");
+const OTP = require("./../otp/model");
 const { sendOTPService, verifyOTPService, deleteOTPService } = require("./../otp/services")
 const { hashData } = require("./../../util/hashData");
 
@@ -8,15 +8,14 @@ const resetUserPassword = async ({ email, otp, newPassword })=>{
         if(!validOTP){
             throw Error("Se ha introducido un código no válido. Revisa tu bandeja de entrada.");s
         }
-
-        //now update user record with new password.
+        //Ahora actualice el registro de usuario con la nueva contraseña.
         if(newPassword.length < 8){
             throw Error("¡¡La contraseña es demasiado corta!!");
         }
         const hashedNewPassword = await hashData(newPassword);
-        await User.updateOne({email}, {password: hashedNewPassword});
+        //await User.updateOne({email}, {password: hashedNewPassword});
         await deleteOTPService(email);
-        return;
+        return hashedNewPassword;
     } catch (error) {
         throw error;
     }
@@ -27,13 +26,13 @@ const resetUserPassword = async ({ email, otp, newPassword })=>{
 const sendPasswordResetOTPEmailService = async (email) =>{
     try {
         //check if an account exits
-        const existingUser = await User.findOne({email});
-        if(!existingUser){
-            throw Error("No hay ninguna cuenta para el correo electrónico proporcionado.");
-        }
-        if(!existingUser.verified){
-            throw Error ("El correo electrónico no ha sido verificado todavía. Revisa tu bandeja de entrada.");
-        }
+        // const existingUser = await OTP.findOne({email});
+        // if(!existingUser){
+        //     throw Error("No hay ninguna cuenta para el correo electrónico proporcionado.");
+        // }
+        // if(!existingUser.verified){
+        //     throw Error ("El correo electrónico no ha sido verificado todavía. Revisa tu bandeja de entrada.");
+        // }
         const otpDetails = {
             email,
             subject: "Restablecer contraseña",

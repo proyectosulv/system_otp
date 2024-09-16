@@ -4,7 +4,7 @@ const router = express.Router();
 const {sendOTPService, verifyOTPService, deleteOTPServie} = require("./services");
 const verifyToken= require("../../middleware/auth")
 
-router.post("/verify", async(req,res)=>{
+router.post("/verify", verifyToken, async(req,res)=>{
     try {
         let {email, otp} = req.body;
 

@@ -6,7 +6,7 @@ const verifyUserEmailService = async ({email, otp})=>{
     try {
         const validOTP = await verifyOTPService ({email, otp});
         if (!validOTP){
-            throw Error("Invalid code passed, check your inbox");
+            throw Error("Se ha introducido un código no válido, revisa tu bandeja de entrada");
         }
         //now update user record to show verified
         await User.updateOne({email}, {verified: true});
@@ -23,7 +23,7 @@ const sendVerificationOTPEmailService = async (email)=>{
         //console.log("yeah", email);
         const existingUser = await User.findOne({ email });
         if(!existingUser){
-            throw Error("There's no account for the provided email");
+            throw Error("No hay ninguna cuenta para el correo electrónico proporcionado");
         }        
         
         //console.log("Entro2: ", existingUser);
