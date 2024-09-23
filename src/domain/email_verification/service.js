@@ -17,6 +17,23 @@ const verifyUserEmailService = async ({email, otp})=>{
     }
 }
 
+
+const verifyUserOTPService = async ({email, otp})=>{
+    try {
+        const validOTP = await verifyOTPService ({email, otp});
+        if (!validOTP){
+            throw Error("Se ha introducido un código no válido, revisa tu bandeja de entrada");
+        }
+        //now update user record to show verified
+        //await User.updateOne({email}, {verified: true});
+        await deleteOTPService(email);
+        return;
+    } catch (error) {
+        throw error;
+    }
+}
+
+
 const sendVerificationOTPEmailService = async (email)=>{
     try {
         //check if an account exists
@@ -41,4 +58,4 @@ const sendVerificationOTPEmailService = async (email)=>{
     }
 }
 
-module.exports = { sendVerificationOTPEmailService, verifyUserEmailService };
+module.exports = { sendVerificationOTPEmailService, verifyUserEmailService, verifyUserOTPService };
